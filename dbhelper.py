@@ -9,12 +9,15 @@ class DBHelper:
 
     def setup(self):
         stmt = "CREATE TABLE IF NOT EXISTS userids (userid text)"
+        sqlite3.connect(":memory:", check_same_thread=False)
+
         self.conn.execute(stmt)
         self.conn.commit()
 
     def add_id(self, userid):
         stmt = "INSERT INTO userids (userid) VALUES (?)"
         args = (userid, )
+        sqlite3.connect(":memory:", check_same_thread=False)
 
         self.conn.execute(stmt, args)
         self.conn.commit()
@@ -22,6 +25,7 @@ class DBHelper:
     def delete_id(self, userid):
         stmt = "DELETE FROM userids WHERE userid = (?)"
         args = (userid, )
+        sqlite3.connect(":memory:", check_same_thread=False)
         self.conn.execute(stmt, args)
         self.conn.commit()
 
