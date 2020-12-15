@@ -6,3 +6,4 @@ innoprayer-dd45c05bd5a4
 *.sqlite
 *.pyc
 *.DS_Store
+__pycache__
