@@ -23,7 +23,7 @@ Prayer_status = sheet_data[1]
 
 #preparing for the database to store the  userids
 db = DBHelper()
-
+db.setup()
 
 #set the port number to listen in for the webhook.
 PORT = int(os.environ.get('PORT', 5000))
@@ -64,22 +64,19 @@ def start(update, context):
 
 
 
-def main():
-    start_handler = CommandHandler('start', start)
-    dispatcher.add_handler(start_handler)
-    print(updater.bot)
-    # updater.start_polling()
-    updater.start_webhook(listen="0.0.0.0",
+
+start_handler = CommandHandler('start', start)
+dispatcher.add_handler(start_handler)
+
+print(updater.bot)
+
+
+#updater.start_polling()
+updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
                           url_path=TOKEN)
-    updater.bot.setWebhook('https://prayer-time-bot.herokuapp.com/' + TOKEN)
+updater.bot.setWebhook('https://prayer-time-bot.herokuapp.com/' + TOKEN)
 
-    updater.idle()
-
-
+updater.idle()
 
 
-
-if __name__ == '__main__':
-    db.setup()
-    main()

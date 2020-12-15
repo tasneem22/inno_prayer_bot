@@ -4,6 +4,7 @@ import sqlite3
 class DBHelper:
     def __init__(self, dbname="userid.sqlite"):
         self.dbname = dbname
+        sqlite3.connect(":memory:", check_same_thread=False)
         self.conn = sqlite3.connect(dbname)
 
     def setup(self):
@@ -14,6 +15,7 @@ class DBHelper:
     def add_id(self, userid):
         stmt = "INSERT INTO userids (userid) VALUES (?)"
         args = (userid, )
+
         self.conn.execute(stmt, args)
         self.conn.commit()
 
