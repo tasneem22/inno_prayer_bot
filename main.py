@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import os
 import logging
 import gspread
@@ -75,3 +76,33 @@ updater.start_polling()
 updater.idle()
 
 
+=======
+import os
+import logging
+
+from telegram.ext import Updater, CommandHandler
+from dotenv import load_dotenv
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+load_dotenv()
+
+TOKEN = os.getenv('BOT_TOKEN')
+updater = Updater(token=TOKEN, use_context=True)
+dispatcher = updater.dispatcher
+
+
+def start(update, context):
+    logging.info(f"Received a message from @{update.effective_chat.username}")
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text=f"I'm a bot, please talk to me {update.effective_chat.first_name}!")
+
+
+start_handler = CommandHandler('start', start)
+dispatcher.add_handler(start_handler)
+
+logging.info('Finished configuration')
+
+updater.start_polling()
+updater.idle()
+>>>>>>> b13c850... Initial commit
