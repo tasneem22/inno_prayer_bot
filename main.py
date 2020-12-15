@@ -44,23 +44,23 @@ def callback_alarm(context):
 
 
 def callback_timer(context):
-    ids = db.get_items()
-
-    for i in range(40):
+    for i in range(10):
         current_array = sheet_data[datetime.now().day + 1]
         current_time = time(int(current_array[i+2].split(':')[0]) , int(current_array[i+2].split(':')[1]))
+        print(current_time)
+
         j.run_once(callback_alarm, current_time,tzinfo=moscow , context=[context.job.context[1],i+2])
 
 
 
 def start(update, context):
-    db.add_id(update.effective_chat.id)
-    context.bot.send_message(chat_id=update.effective_chat.id,
+    new_id = update.effective_chat.id
+    db.add_id(new_id)
+    print(db)
+    context.bot.send_message(chat_id=new_id,
                              text="Welcome in Innopolis Prayer time Bot!")
-    ids = db.get_items()
-
-    for id in ids:
-        j.run_daily(callback_timer,datetime.now(),context=sheet.row_values(id))
+    print(datetime.now())
+    j.run_daily(callback_timer,datetime.now(),context=new_id)
 
 
 
