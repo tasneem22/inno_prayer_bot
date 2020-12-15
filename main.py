@@ -27,7 +27,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 load_dotenv()
 
-TOKEN = os.getenv('BOT_TOKEN')
+TOKEN = '1155106665:AAGFXra4l-XnHa2lIBwZlWLRFVu5EDpYd4c'
 updater = Updater(token=TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 j = updater.job_queue
