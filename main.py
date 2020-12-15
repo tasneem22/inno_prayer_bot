@@ -7,6 +7,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler,    Filters, In
 from dotenv import load_dotenv
 from datetime import datetime,time
 from pytz import timezone
+from dbhelper import DBHelper
 
 
 # parsing data first!!, into a 2D array
@@ -19,6 +20,10 @@ sheet = client.open("Copy of Innopolis prayer timetable1").sheet1
 sheet_data = sheet.get_all_values()
 Prayer_name = sheet_data[0]
 Prayer_status = sheet_data[1]
+
+#preparing for the database to store the  userids
+db = DBHelper()
+db.setup()
 
 #set the port number to listen in for the webhook.
 PORT = int(os.environ.get('PORT', 5000))
@@ -39,27 +44,23 @@ def callback_alarm(context):
 
 
 def callback_timer(context):
+    ids = db.get_items()
 
-    for i in range(10):
-        x = i+2
-        now = datetime.now()
-        current_day = now.day
-        current_array = sheet_data[current_day + 1]
-        current_time = time(int(current_array[x].split(':')[0]) , int(current_array[x].split(':')[1]))
-        j.run_once(callback_alarm, current_time,tzinfo=moscow , context=[context.job.context[1],x])
+    for i in range(40):
+        current_array = sheet_data[datetime.now().day + 1]
+        current_time = time(int(current_array[i+2].split(':')[0]) , int(current_array[i+2].split(':')[1]))
+        j.run_once(callback_alarm, current_time,tzinfo=moscow , context=[context.job.context[1],i+2])
 
 
 
 def start(update, context):
-    row = ["chat_id = " , str(update.effective_chat.id)]
-    sheet.insert_row(row,40)
+    db.add_id(update.effective_chat.id)
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text="Welcome in Innopolis Prayer time Bot!")
-    for i in range(150):
-        x = i+40
-        if x > sheet.row_count:
-            break
-        j.run_daily(callback_timer,time(16,16),context=sheet.row_values(x))
+    ids = db.get_items()
+
+    for id in ids:
+        j.run_daily(callback_timer,datetime.now(),context=sheet.row_values(id))
 
 
 
